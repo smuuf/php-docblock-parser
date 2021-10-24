@@ -1,0 +1,26 @@
+{
+	"name": "smuuf/php-docblock-parser",
+	"description": "Just a simple PHP docblock parser.",
+	"type": "library",
+	"require": {
+		"php": "^7.4|^8.0",
+		"ext-mbstring": "*",
+		"smuuf/strict-object": "^1.0"
+	},
+	"require-dev": {
+		"nette/tester": "^2.4",
+		"phpstan/phpstan": "^0.12.67"
+	},
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Smuuf",
+			"email": "premavansmuuf+composer@gmail.com"
+		}
+	],
+	"autoload":{
+		"psr-4": {
+			"Smuuf\\DocBlockParser\\": "src/"
+		}
+	}
+}

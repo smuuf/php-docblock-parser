@@ -1,0 +1,7 @@
+vendor/
+.vscode/**
+temp/**
+!temp/.gitkeep
+tests/**/output/*.actual
+tests/**/output/*.expected
+coverage.*
