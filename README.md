@@ -1,3 +1,5 @@
+[![PHP tests](https://github.com/smuuf/php-docblock-parser/actions/workflows/php.yml/badge.svg)](https://github.com/smuuf/php-docblock-parser/actions/workflows/php.yml)
+
 # PHP Docblock Text Parser
 
 Simple tool to parse PHP docblock text with ability to also read tags and their arguments in form:
