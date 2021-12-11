@@ -35,7 +35,7 @@ abstract class Parser {
 
 	}
 
-	/** @return array{array<string, Tag>, string} */
+	/** @return array{Tags, string} */
 	public static function parseTags(string $text): array {
 
 		$gathered = [];
@@ -70,12 +70,7 @@ abstract class Parser {
 
 		}, $text);
 
-		$tags = [];
-		foreach ($gathered as $tag) {
-			$tags[$tag->getName()] = $tag;
-		}
-
-		return [$tags, (string) $newText];
+		return [new Tags($gathered), (string) $newText];
 
 	}
 

@@ -2,9 +2,10 @@
 
 use \Tester\Assert;
 
-use \Smuuf\DocBlockParser\DocBlock;
 use \Smuuf\DocBlockParser\Tag;
+use \Smuuf\DocBlockParser\Tags;
 use \Smuuf\DocBlockParser\TagArg;
+use \Smuuf\DocBlockParser\DocBlock;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -15,36 +16,70 @@ Assert::type(DocBlock::class, $docblock);
 // Accessing block tags.
 //
 
-$tags = $docblock->getTags();
-Assert::type('array', $tags);
-Assert::true($docblock->hasTag('tag1'));
-Assert::true($docblock->hasTag('tag2.oh.my.science'));
-Assert::true($docblock->hasTag('tag3.oh.my.science'));
-Assert::true($docblock->hasTag('tag4.well.well.well-mega/well'));
-Assert::false($docblock->hasTag('nonexistent-bogus-tag'));
-Assert::false($docblock->hasTag('nonexistent bogus tag'));
+$allTags = $docblock->getTags();
+Assert::type(Tags::class, $allTags);
+Assert::true($allTags->hasTag('tag1'));
+Assert::true($allTags->hasTag('tag2.oh.my.science'));
+Assert::true($allTags->hasTag('tag3.oh.my.science'));
+Assert::true($allTags->hasTag('tag4.well.well.well-mega/well'));
+Assert::false($allTags->hasTag('nonexistent-bogus-tag'));
+Assert::false($allTags->hasTag('nonexistent bogus tag'));
 
 //
 // Tag 1 and its args.
 //
 
-$tag = $docblock->getTag('tag1');
+$tags = $allTags->getTags('tag1');
+Assert::type(Tags::class, $tags);
+
+$tag = $tags->getFirst();
 Assert::type(Tag::class, $tag);
 Assert::same('tag1', $tag->getName());
 
-$args = $tag->getArgs();
+//
+// Get all tags from tags named "tag1".
+//
+
+$allTag1s = $tags->getAll();
+Assert::type('list', $allTag1s);
+
+//
+// Test first tag from tags named "tag1".
+//
+
+Assert::type(Tag::class, $allTag1s[0]);
+Assert::same('tag1', $allTag1s[0]->getName());
+
+//
+// Test non-existence of args for first tag from tags named "tag1".
+//
+$args = $allTag1s[0]->getArgs();
 Assert::type('array', $args);
 Assert::falsey($args);
 Assert::false($tag->hasArg('nonexistent arg'));
-
 // Fetching non-existent arg returns null.
 Assert::null($tag->getArg('nonexistent arg'));
+
+//
+// Test second tag from tags named "tag1".
+//
+
+Assert::type(Tag::class, $allTag1s[1]);
+Assert::same('tag1', $allTag1s[1]->getName());
+
+$args = $allTag1s[1]->getArgs();
+Assert::truthy($args);
+$firstArg = reset($args);
+Assert::same('tag1_arg', $firstArg->getName());
+Assert::same('123', $firstArg->getValue());
+
+Assert::false(isset($allTag1s[2]));
 
 //
 // Tag 2 and its args.
 //
 
-$tag = $docblock->getTag('tag2.oh.my.science');
+$tag = $docblock->getTags('tag2.oh.my.science')->getFirst();
 Assert::type(Tag::class, $tag);
 Assert::same('tag2.oh.my.science', $tag->getName());
 
@@ -56,7 +91,7 @@ Assert::falsey($args);
 // Tag 3 and its args.
 //
 
-$tag = $docblock->getTag('tag3.oh.my.science');
+$tag = $docblock->getTags('tag3.oh.my.science')->getFirst();
 Assert::type(Tag::class, $tag);
 Assert::same('tag3.oh.my.science', $tag->getName());
 
@@ -78,7 +113,7 @@ Assert::same(null, $arg->getValue());
 // Tag 4 and its args.
 //
 
-$tag = $docblock->getTag('tag4.well.well.well-mega/well');
+$tag = $docblock->getTags('tag4.well.well.well-mega/well')->getFirst();
 Assert::type(Tag::class, $tag);
 Assert::same('tag4.well.well.well-mega/well', $tag->getName());
 

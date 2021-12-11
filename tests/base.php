@@ -37,6 +37,7 @@ $text = <<<X
  * ```
  *
  * @tag1
+ * @tag1(tag1_arg: 123)
  * @tag2.oh.my.science
  * @tag3.oh.my.science(something is lurking here and it looks like some kind
  * 	of argument that spilled over to next line)

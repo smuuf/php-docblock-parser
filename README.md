@@ -45,6 +45,8 @@ consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
 
 @tag1
 @tag2.abc(arg1: yes, arg2 = no, arg3-without-value, arg4=maybe)
+@tag3
+@tag3(but_with: argument)
 TEXT;
 
 $docBlock = \Smuuf\DocBlockParser\Parser::parse($text);
@@ -62,22 +64,33 @@ $docBlock->getText(); // "Lorem ipsum dolor sit amet. Consectetuer ..."
 // Tags.
 //
 
-$docBlock->getTags(); // A dict array of [tag_name => Tag object].
+$docBlock->getTags(); // Tags object containing all tags.
 $docBlock->hasTag('tag1'); // true
 $docBlock->hasTag('tag2.abc'); // true
-$docBlock->hasTag('tag999'); // false
+$docBlock->hasTag('tag3'); // true
+$docBlock->hasTag('tag999lol'); // false
 
 //
 // Single tag.
 //
 
-$tag = $docBlock->getTag('tag2.abc'); // Instance of Tag object.
+$tag = $docBlock->getTags('tag2.abc')->getFirst(); // Instance of Tag object.
 $tag->getArgs(); // A dict array of [tag_arg_name => TagArg object]
+
+//
+// Multiple tags with the same name.
+//
+
+$docBlock->getTags('tag3')->getAll(); // List array [<Tag object for "@tag3">, <Tag object for "@tag3(but_with: argument)">]
+
+$tag = $docBlock->getTags('tag3')->getFirst(); // Instance of Tag object for the tag "@tag3".
+$tag->getArgs(); // An empty array.
 
 //
 // Tag args.
 //
 
+$tag = $docBlock->getTags('tag2.abc')->getFirst();
 $tag->hasArg('arg1'); // true
 $tag->hasArg('arg2'); // true
 $tag->hasArg('arg999'); // false

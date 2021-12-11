@@ -13,16 +13,12 @@ class DocBlock {
 	private ?string $title;
 	private ?string $body;
 
-	/** @var array<string, Tag> */
-	private array $tags;
+	private Tags $tags;
 
-	/**
-	 * @param array<string, Tag> $tags
-	 */
-	public function __construct(string $text, array $tags = []) {
+	public function __construct(string $text, ?Tags $tags = null) {
 
 		[$this->text, $this->title, $this->body] = self::processText($text);
-		$this->tags = $tags;
+		$this->tags = $tags ?? new Tags;
 
 	}
 
@@ -62,17 +58,12 @@ class DocBlock {
 	// Tags.
 	//
 
-	/** @return array<string, Tag> */
-	public function getTags(): array {
-		return $this->tags;
+	public function getTags(?string $name = null): Tags {
+		return $this->tags->getTags($name);
 	}
 
 	public function hasTag(string $name): bool {
-		return isset($this->tags[$name]);
-	}
-
-	public function getTag(string $name): ?Tag {
-		return $this->tags[$name] ?? null;
+		return $this->tags->hasTag($name);
 	}
 
 	//
